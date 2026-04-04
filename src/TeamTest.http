@@ -1,0 +1,136 @@
+### 1. Получить все команды
+GET http://localhost:8080/api/teams
+
+### 2. Получить команду по ID (например, ID = 1)
+GET http://localhost:8080/api/teams/2
+
+### 3. Получить команду по названию
+GET http://localhost:8080/api/teams/by-name?name=ЦСКА
+
+### 4. Поиск команд по названию (частичное совпадение)
+GET http://localhost:8080/api/teams/search?name=Спар
+
+### 5. Получить все команды вида спорта (например, ID вида спорта = 1)
+GET http://localhost:8080/api/teams/sport-type/2
+
+### ============================================
+### СОЗДАНИЕ (POST)
+### ============================================
+
+### 6. Создать команду
+POST http://localhost:8080/api/teams
+Content-Type: application/json
+
+{
+  "name": "Спартак",
+  "sportTypeId": 1
+}
+
+### 7. Создать команду другого вида спорта
+POST http://localhost:8080/api/teams
+Content-Type: application/json
+
+{
+  "name": "ЦСКА",
+  "sportTypeId": 2
+}
+
+### ============================================
+### ОБНОВЛЕНИЕ (PUT)
+### ============================================
+
+### 8. Обновить название команды
+PUT http://localhost:8080/api/teams/1
+Content-Type: application/json
+
+{
+  "name": "Спартак-Москва"
+}
+
+### 9. Обновить вид спорта команды
+PUT http://localhost:8080/api/teams/1
+Content-Type: application/json
+
+{
+  "sportTypeId": 2
+}
+
+### 10. Частичное обновление (только название)
+PUT http://localhost:8080/api/teams/1
+Content-Type: application/json
+
+{
+  "name": "Динамо"
+}
+
+### ============================================
+### УДАЛЕНИЕ (DELETE)
+### ============================================
+
+### 11. Удалить команду по ID
+DELETE http://localhost:8080/api/teams/1
+
+### ============================================
+### ТЕСТЫ ВАЛИДАЦИИ И ОШИБОК
+### ============================================
+
+### 12. Ошибка: команда не найдена (должен вернуть 404)
+GET http://localhost:8080/api/teams/999
+
+### 13. Ошибка: команда по названию не найдена (должен вернуть 404)
+GET http://localhost:8080/api/teams/name/НесуществующаяКоманда
+
+### 14. Ошибка: дубликат названия команды (должен вернуть 409)
+POST http://localhost:8080/api/teams
+Content-Type: application/json
+
+{
+  "name": "Спартак",
+  "sportTypeId": 2
+}
+
+### 15. Ошибка: вид спорта не найден (должен вернуть 404)
+POST http://localhost:8080/api/teams
+Content-Type: application/json
+
+{
+  "name": "Новая Команда",
+  "sportTypeId": 999
+}
+
+### 16. Ошибка: отсутствие названия команды (должен вернуть 400)
+POST http://localhost:8080/api/teams
+Content-Type: application/json
+
+{
+  "sportTypeId": 1
+}
+
+### 17. Ошибка: отсутствие вида спорта (должен вернуть 400)
+POST http://localhost:8080/api/teams
+Content-Type: application/json
+
+{
+  "name": "Новая Команда"
+}
+
+### 18. Ошибка: слишком длинное название (должен вернуть 400)
+POST http://localhost:8080/api/teams
+Content-Type: application/json
+
+{
+  "name": "ОченьДлинноеНазваниеКомандыКотороеПревышаетДвастаПятьдесятПятьСимволовИДолжноВызватьОшибкуВалидацииНаСервереПриПопыткеСозданияТакойКомандыВБазеДанных",
+  "sportTypeId": 1
+}
+
+### 19. Ошибка: команда не найдена при обновлении (должен вернуть 404)
+PUT http://localhost:8080/api/teams/999
+Content-Type: application/json
+
+{
+  "name": "Обновленная Команда"
+}
+
+### 20. Ошибка: команда не найдена при удалении (должен вернуть 404)
+DELETE http://localhost:8080/api/teams/999
+

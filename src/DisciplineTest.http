@@ -1,0 +1,143 @@
+### ============================================
+### DISCIPLINE_STAGE - PUT запросы
+### ============================================
+
+GET http://localhost:8080/api/ref/discipline-types
+
+### 1. Обновить название этапа (успешно)
+
+
+POST http://localhost:8080/api/ref/discipline-types
+Content-Type: application/json
+
+{
+  "sportTypeId": 4,
+  "participantGender": "Female",
+  "participationType": "Personal",
+  "description": "Личное первенство женщин"
+}
+### 1. Обновить название этапа (успешно)
+PUT http://localhost:8080/api/ref/discipline-stages/3
+Content-Type: application/json
+
+{
+  "stageName": "Финальный этап"
+}
+
+### 2. Обновить номер этапа (успешно)
+PUT http://localhost:8080/api/ref/discipline-stages/1
+Content-Type: application/json
+
+{
+  "stageNumber": "1/2"
+}
+
+### 3. Обновить порядок этапа (успешно)
+PUT http://localhost:8080/api/ref/discipline-stages/1
+Content-Type: application/json
+
+{
+  "stageOrder": 10
+}
+
+### 4. Ошибка: дубликат названия этапа (должен вернуть 409)
+PUT http://localhost:8080/api/ref/discipline-stages/1
+Content-Type: application/json
+
+{
+  "stageName": "Финал"
+}
+
+### 5. Ошибка: дубликат номера этапа (должен вернуть 409)
+PUT http://localhost:8080/api/ref/discipline-stages/1
+Content-Type: application/json
+
+{
+  "stageNumber": "1/4"
+}
+
+### 6. Ошибка: этап не найден (должен вернуть 404)
+PUT http://localhost:8080/api/ref/discipline-stages/999
+Content-Type: application/json
+
+{
+  "stageName": "Новый этап"
+}
+
+### ============================================
+### DISCIPLINE_TYPE - PUT запросы
+### ============================================
+
+### 7. Обновить описание типа дисциплины (успешно)
+PUT http://localhost:8080/api/ref/discipline-types/3
+Content-Type: application/json
+
+{
+  "description": "Обновлённое описание"
+}
+
+### 8. Обновить вид спорта (успешно)
+PUT http://localhost:8080/api/ref/discipline-types/1
+Content-Type: application/json
+
+{
+  "sportTypeId": 2
+}
+
+### 9. Обновить пол участников (успешно)
+PUT http://localhost:8080/api/ref/discipline-types/1
+Content-Type: application/json
+
+{
+  "participantGender": "Female"
+}
+
+### 10. Обновить тип участия (успешно)
+PUT http://localhost:8080/api/ref/discipline-types/1
+Content-Type: application/json
+
+{
+  "participationType": "Team"
+}
+
+### 11. Ошибка: дубликат типа дисциплины (должен вернуть 409)
+PUT http://localhost:8080/api/ref/discipline-types/1
+Content-Type: application/json
+
+{
+  "sportTypeId": 1,
+  "participantGender": "Male",
+  "participationType": "Personal"
+}
+
+### 12. Ошибка: вид спорта не найден (должен вернуть 404)
+PUT http://localhost:8080/api/ref/discipline-types/1
+Content-Type: application/json
+
+{
+  "sportTypeId": 999
+}
+
+### 13. Ошибка: тип дисциплины не найден (должен вернуть 404)
+PUT http://localhost:8080/api/ref/discipline-types/999
+Content-Type: application/json
+
+{
+  "description": "Тест"
+}
+
+### 14. Частичное обновление (только описание)
+PUT http://localhost:8080/api/ref/discipline-types/1
+Content-Type: application/json
+
+{
+  "description": "Только описание обновлено"
+}
+
+### 15. Проверка валидации: слишком длинное название
+PUT http://localhost:8080/api/ref/discipline-stages/1
+Content-Type: application/json
+
+{
+  "stageName": "ОченьДлинноеНазваниеЭтапаКотороеПревышаетСтоСимволовИДолжноВызватьОшибкуВалидацииНаСервереПриПопыткеОбновленияТакогоЭтапаВБазеДанных"
+}

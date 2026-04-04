@@ -1,0 +1,188 @@
+### 1. Получить все соревнования
+GET http://localhost:8080/api/competitions
+
+### 2. Получить соревнование по ID (например, ID = 1)
+GET http://localhost:8080/api/competitions/2
+
+### 3. Получить соревнования по виду спорта (например, ID вида спорта = 1)
+GET http://localhost:8080/api/competitions/sport-type/1
+
+### 4. Получить соревнования по типу (например, ID типа = 1)
+GET http://localhost:8080/api/competitions/competition-type/1
+
+### 5. Получить соревнования по спортивному объекту (например, ID объекта = 1)
+GET http://localhost:8080/api/competitions/sport-facility/1
+
+### 6. Получить соревнования по диапазону дат
+GET http://localhost:8080/api/competitions/date-range?startDate=2026-01-01&endDate=2026-12-31
+
+### 7. Получить предстоящие соревнования
+GET http://localhost:8080/api/competitions/upcoming
+
+### 8. Поиск соревнований по организатору
+GET http://localhost:8080/api/competitions/search?organizer=Федерация
+
+### ============================================
+### СОЗДАНИЕ (POST)
+### ============================================
+
+### 9. Создать соревнование
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "startDate": "2026-06-15",
+  "endDate": "2026-06-20",
+  "competitionTypeId": 6,
+  "sportFacilityId": 11,
+  "organizer": "Министерство спорта",
+  "sportTypeId": 6,
+  "description": "Чемпионат города",
+  "name": "Соревнований по соревнованиям 3"
+}
+
+### 10. Создать соревнование без даты окончания (однодневное)
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "startDate": "2026-07-01",
+  "competitionTypeId": 6,
+  "sportFacilityId": 12,
+  "organizer": "Спортклуб",
+  "sportTypeId": 5,
+  "description": "Турнир"
+}
+
+### ============================================
+### ОБНОВЛЕНИЕ (PUT)
+### ============================================
+
+### 11. Обновить даты соревнования
+PUT http://localhost:8080/api/competitions/1
+Content-Type: application/json
+
+{
+  "startDate": "2026-08-01",
+  "endDate": "2026-08-05"
+}
+
+### 12. Обновить организатора
+PUT http://localhost:8080/api/competitions/1
+Content-Type: application/json
+
+{
+  "organizer": "Новый организатор"
+}
+
+### 13. Обновить спортивный объект
+PUT http://localhost:8080/api/competitions/1
+Content-Type: application/json
+
+{
+  "sportFacilityId": 2
+}
+
+### 14. Частичное обновление (только описание)
+PUT http://localhost:8080/api/competitions/1
+Content-Type: application/json
+
+{
+  "description": "Обновленное описание соревнования"
+}
+
+### ============================================
+### УДАЛЕНИЕ (DELETE)
+### ============================================
+
+### 15. Удалить соревнование по ID
+DELETE http://localhost:8080/api/competitions/1
+
+### ============================================
+### ТЕСТЫ ВАЛИДАЦИИ И ОШИБОК
+### ============================================
+
+### 16. Ошибка: соревнование не найдено (должен вернуть 404)
+GET http://localhost:8080/api/competitions/999
+
+### 17. Ошибка: тип соревнования не найден (должен вернуть 404)
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "startDate": "2026-06-15",
+  "competitionTypeId": 999,
+  "sportFacilityId": 1,
+  "organizer": "Тест",
+  "sportTypeId": 1
+}
+
+### 18. Ошибка: спортивный объект не найден (должен вернуть 404)
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "startDate": "2026-06-15",
+  "competitionTypeId": 1,
+  "sportFacilityId": 999,
+  "organizer": "Тест",
+  "sportTypeId": 1
+}
+
+### 19. Ошибка: вид спорта не найден (должен вернуть 404)
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "startDate": "2026-06-15",
+  "competitionTypeId": 1,
+  "sportFacilityId": 1,
+  "organizer": "Тест",
+  "sportTypeId": 999
+}
+
+### 20. Ошибка: дата начала в прошлом (должен вернуть 400)
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "startDate": "2020-01-01",
+  "competitionTypeId": 1,
+  "sportFacilityId": 1,
+  "organizer": "Тест",
+  "sportTypeId": 1
+}
+
+### 21. Ошибка: отсутствие даты начала (должен вернуть 400)
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "competitionTypeId": 1,
+  "sportFacilityId": 1,
+  "organizer": "Тест",
+  "sportTypeId": 1
+}
+
+### 22. Ошибка: отсутствие организатора (должен вернуть 400)
+POST http://localhost:8080/api/competitions
+Content-Type: application/json
+
+{
+  "startDate": "2026-06-15",
+  "competitionTypeId": 1,
+  "sportFacilityId": 1,
+  "sportTypeId": 1
+}
+
+### 23. Ошибка: соревнование не найдено при обновлении (должен вернуть 404)
+PUT http://localhost:8080/api/competitions/999
+Content-Type: application/json
+
+{
+  "organizer": "Новый организатор"
+}
+
+### 24. Ошибка: соревнование не найдено при удалении (должен вернуть 404)
+DELETE http://localhost:8080/api/competitions/999
+

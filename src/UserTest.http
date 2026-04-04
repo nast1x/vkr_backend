@@ -1,0 +1,173 @@
+# ============================================
+# ПОЛУЧЕНИЕ ДАННЫХ (GET)
+# ============================================
+
+# 1. Получить всех пользователей
+GET http://localhost:8080/api/users
+
+
+GET http://localhost:8080/api/users/1
+
+### 3. Получить пользователя по email
+GET http://localhost:8080/api/users/email/coach@example.com
+
+### 4. Поиск пользователей по фамилии
+GET http://localhost:8080/api/users/search?lastName=Иванов
+
+### 5. Получить всех воспитанников тренера (например, ID тренера = 1)
+GET http://localhost:8080/api/users/coach/1/trainees
+
+# ============================================
+# СОЗДАНИЕ (POST)
+# ============================================
+
+### 6. Создать тренера
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "at_2@example.com",
+  "password": "password123",
+  "lastName": "Иванов",
+  "firstName": "Иван",
+  "middleName": "Иванович",
+  "birthDate": "1980-05-15",
+  "gender": "Male",
+  "roleId": 2,
+  "coachId": null
+}
+
+### 7. Создать воспитанника с привязкой к тренеру
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "trainee@example.com",
+  "password": "password123",
+  "lastName": "Петров",
+  "firstName": "Петр",
+  "middleName": "Петрович",
+  "birthDate": "2005-03-20",
+  "gender": "Male",
+  "roleId": 2,
+  "coachId": 1
+}
+
+
+### 8. Обновить данные пользователя (частичное обновление)
+PUT http://localhost:8080/api/users/4
+Content-Type: application/json
+
+{
+  "roleId": 4
+}
+
+
+### 8. Обновить данные пользователя (частичное обновление)
+PUT http://localhost:8080/api/users/4
+Content-Type: application/json
+
+{
+  "imageLink": "https://s30nrg.storage.yandex.net/rdisk/76c30fb49b6662b7220e7f155caa7b3e0a74b934274cd6d35324a8f69188c5cb/69c1ef8c/TQOns3PCcP3lCOO4Ow3QSpM1TlMA2uqCT7C02kvA6oTUD-YxUzx8rLYuyduciBjA39HxLBRaVpfykozkja4_-A==?uid=330029953&filename=QYgs0zP6q3yQY5HNAFWFoGEcpvhdLUk6ye3AlHJIjft_pjHKGVb7S7KrNPh-xbaZhQkTUH8dl57TUosMYpKP5C-M.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=330029953&fsize=1842923&hid=ed1a7fd0775ae53f9a4047f9a9431eba&media_type=image&tknv=v3&etag=fc0af2f3847290b8ba18f597a9cab7f9&ts=64dbb7971fb00&s=b7220720a230fe5abeea49c3f294fff6bdde34d6e713452c1fa0a709c4800ab7&pb=U2FsdGVkX1_m5qFQRCmcgT_UQH9wM0ju7h24pVCs1TcyR6jHQ6B4qgKCIBHewOGWRc6uGHVzL5wikbA-aCBCQbCh8IEECa6kkf5gv4VIzyI"
+}
+
+### 9. Привязать воспитанника к другому тренеру
+PUT http://localhost:8080/api/users/2
+Content-Type: application/json
+
+{
+  "coachId": 3
+}
+
+### 10. Убрать тренера у воспитанника
+PUT http://localhost:8080/api/users/2
+Content-Type: application/json
+
+{
+  "coachId": null
+}
+
+### ============================================
+### УДАЛЕНИЕ (DELETE)
+### ============================================
+
+### 11. Удалить пользователя по ID
+DELETE http://localhost:8080/api/users/2
+
+# ============================================
+# ТЕСТЫ ВАЛИДАЦИИ И ОШИБОК
+# ============================================
+
+### 12. Ошибка: некорректный email (должен вернуть 400)
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "invalid-email",
+  "password": "password123",
+  "lastName": "Тест",
+  "firstName": "Тест",
+  "roleId": 1
+}
+
+### 13. Ошибка: дубликат email (должен вернуть 409)
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "coach@example.com",
+  "password": "password123",
+  "lastName": "Дубликат",
+  "firstName": "Тест",
+  "roleId": 1
+}
+
+### 14. Ошибка: пользователь не найден (должен вернуть 404)
+GET http://localhost:8080/api/users/999
+
+### 15. Ошибка: тренер не найден (должен вернуть 404)
+GET http://localhost:8080/api/users/coach/999/trainees
+
+### 16. Ошибка: короткий пароль (должен вернуть 400)
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "123",
+  "lastName": "Тест",
+  "firstName": "Тест",
+  "roleId": 1
+}
+
+### GET
+
+GET http://localhost:8080/api/users/profile/4
+
+###
+### Загрузка фотографии пользователя
+POST http://localhost:8080/api/users/profile/photo
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4IiwiZW1haWwiOiJhdGhsZXRlMTIzQGV4YW1wbGUuY29tIiwicm9sZSI6IkF0aGxldGUiLCJ0eXBlIjoiYWNjZXNzIiwiaXNzIjoic3BvcnQta3Vycy1hcGkiLCJpYXQiOjE3NzUzMzI0NTMsImV4cCI6MTc3NTMzMzM1M30.nzxwvx8GLB7pPLDmxSZmsKxQQA3NOUBtKqbZ6TmIhYtUruo0SU-q_1-4tiH1IE00
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="avatar.jpg"
+
+< C:/Users/Rasskaz/Desktop/ПЕЧать/Фотки/3f74f2f3e7dd8ac9b5d697439cd3716c.jpg
+--WebAppBoundary--
+
+### 3. Вход в систему (получение новых токенов)
+### Тестируем корректную установку httpOnly cookies
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "athlete123@example.com",
+  "password": "password123"
+}
+
+
+### 5. Доступ к профилю текущего пользователя
+### Извлекает userId из access_token
+GET http://localhost:8080/api/users/profile/me
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4IiwiZW1haWwiOiJhdGhsZXRlMTIzQGV4YW1wbGUuY29tIiwicm9sZSI6IkF0aGxldGUiLCJ0eXBlIjoiYWNjZXNzIiwiaXNzIjoic3BvcnQta3Vycy1hcGkiLCJpYXQiOjE3NzUzMzI0NTMsImV4cCI6MTc3NTMzMzM1M30.nzxwvx8GLB7pPLDmxSZmsKxQQA3NOUBtKqbZ6TmIhYtUruo0SU-q_1-4tiH1IE00

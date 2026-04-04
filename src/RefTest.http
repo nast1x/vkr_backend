@@ -1,0 +1,240 @@
+### 1. ТИПЫ СОРЕВНОВАНИЙ: Получить все
+GET http://localhost:8080/api/ref/competition-type
+
+
+### 2. ТИПЫ СОРЕВНОВАНИЙ: Поиск по названию
+GET http://localhost:8080/api/ref/competition-type/search?name=City
+
+
+### 3. ТИПЫ СОРЕВНОВАНИЙ: Создать новый
+POST http://localhost:8080/api/ref/competition-type
+Content-Type: application/json
+
+{
+  "name": "Новый уровень",
+  "description": "Тестовое описание"
+}
+
+### 4. ТИПЫ СОРЕВНОВАНИЙ: Обновить (ID=11)
+PUT http://localhost:8080/api/ref/competition-type/11
+Content-Type: application/json
+
+{
+  "name": "Измененное имя",
+  "description": "Измененное описание"
+}
+
+### 5. ТИПЫ СОРЕВНОВАНИЙ: Удалить (ID=11)
+DELETE http://localhost:8080/api/ref/competition-type/12
+
+
+### 6. УНИВЕРСИТЕТЫ: Список вузов
+GET http://localhost:8080/api/ref/university
+
+### 7. УНИВЕРСИТЕТЫ: Добавить ВУЗ
+POST http://localhost:8080/api/ref/university
+Content-Type: application/json
+
+{
+  "name": "Политехнический университет",
+  "shortName": "СамГТУ",
+  "city": "Самара",
+  "description": "Технический вуз"
+}
+
+
+### 8. СПЕЦИАЛЬНОСТИ: Список специальностей
+GET http://localhost:8080/api/ref/major
+
+### 9. ВИДЫ СПОРТА: Список видов спорта
+GET http://localhost:8080/api/ref/sport-type
+
+### 10. ВИДЫ СПОРТА: Добавить вид спорта
+POST http://localhost:8080/api/ref/sport-type
+Content-Type: application/json
+
+{
+  "name": "CyberSport",
+  "description": "Соревнования по компьютерным играм"
+}
+
+
+### 11. РАЗРЯДЫ: Список разрядов
+GET http://localhost:8080/api/ref/sport-rank
+
+### 12. ПОЗИЦИИ ИГРОКОВ: Список позиций
+GET http://localhost:8080/api/ref/player-position
+
+### 13. РОЛИ: Список ролей
+GET http://localhost:8080/api/ref/roles
+
+### 13. СПОРТИВНЫЕ ОБЪЕКТЫ: Список объектов
+GET http://localhost:8080/api/ref/sport-facilities
+
+
+### 13. СПОРТИВНЫЕ ОБЪЕКТЫ: Список объектов
+PUT http://localhost:8080/api/ref/sport-facilities/11
+Content-Type: application/json
+
+{
+  "imageLink": "https://s448vla.storage.yandex.net/rdisk/5dc3c2f94b1c6c674d55f2559a746e297a4c170d45f599330c963abfbd0cbfcb/69c1ec9d/O9fUsOLp3doC5avCffIt5r7trlThmro9gAzjoKWAiQ22VIagJTycqfClNzP3C7Bz4ttFwTvVYfa5CmD5hYTsQQ==?uid=0&filename=722abb981f547cd4675ce6122ae05e5c.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&fsize=144271&hid=05d3ddb8f66a33722d15b10475b6ab2c&media_type=image&tknv=v3&etag=d0bbc5ffe77d0e8dc21b5b838bf0ad9d&ts=64dbb4caea140&s=924411455dd93730588bc27f81d82594d645f56b8199a1bc9c7bc6b6ccef890f&pb=U2FsdGVkX1_eNDx_NBcH5_C8_Pym7BnC3WMU7rwgj8-OPtL7ohKxfhHB14U7grQdA0KgYjb8rgevWE7_JiY-4tJSg5DdtGK8kOWSMLm1I8M"
+}
+
+
+
+### --- 1. ТИПЫ СОРЕВНОВАНИЙ ---
+
+### ОШИБКА 400: Пустое имя (NotBlank)
+POST http://localhost:8080/api/ref/competition-type
+Content-Type: application/json
+
+{
+  "name": "ыв ",
+  "description": ""
+}
+
+### ОШИБКА 400: Слишком длинное название (>100 символов)
+POST http://localhost:8080/api/ref/competition-type
+Content-Type: application/json
+
+{
+  "name": "Очень длинное название, которое точно превышает лимит в сто символов, установленный в нашей сущности через аннотацию Size",
+  "description": "Тест лимита"
+}
+
+
+### --- 2. УНИВЕРСИТЕТЫ ---
+
+### ОШИБКА 400: Слишком длинное краткое название (Limit 20)
+POST http://localhost:8080/api/ref/university
+Content-Type: application/json
+
+{
+  "name": "Самарский университет",
+  "shortName": "САМАРСКИЙ_УНИВЕРСИТЕТ_СЛИШКОМ_ДЛИННО",
+  "city": "Самара"
+}
+
+### ОШИБКА 409: Дубликат названия (Conflict)
+# Выполни этот запрос дважды. Второй раз вернет 409.
+POST http://localhost:8080/api/ref/university
+Content-Type: application/json
+
+{
+  "name": "НМГУ",
+  "shortName": "НМГУ",
+  "city": "Москва"
+}
+
+
+### --- 3. СПЕЦИАЛЬНОСТИ ---
+
+### ОШИБКА 400: Неверный формат кода (Pattern XX.XX.XX)
+POST http://localhost:8080/api/ref/major
+Content-Type: application/json
+
+{
+  "name": "Программная инженерия",
+  "code": "09-03-04",
+  "description": "Тут дефисы вместо точек"
+}
+
+
+### --- 4. ВИДЫ СПОРТА ---
+
+### ОШИБКА 400: Отсутствие обязательного поля
+
+GET http://localhost:8080/api/ref/sport-type
+
+### ОШИБКА 400: Отсутствие обязательного поля
+
+POST http://localhost:8080/api/ref/sport-type
+Content-Type: application/json
+
+{
+  "description": "Поля name вообще нет в JSON"
+}
+
+
+### --- 5. РОЛИ (БЕЗОПАСНОСТЬ) ---
+
+### ОШИБКА 403: Запрет на создание роли (denyAll в SecurityConfig)
+POST http://localhost:8080/api/ref/roles
+Content-Type: application/json
+
+{
+  "name": "SUPER_ADMIN",
+  "description": "Попытка взлома прав"
+}
+
+
+### --- 6. СПОРТИВНЫЕ ОБЪЕКТЫ ---
+
+### ОШИБКА 409: Дубликат адреса (Составной Unique Constraint)
+# Если объект по этому адресу уже есть — получим 409
+POST http://localhost:8080/api/ref/sport-facilities
+Content-Type: application/json
+
+{
+  "city": "Самара",
+  "street": "Лукачева",
+  "streetNumber": "45",
+  "purpose": "Повторный объект"
+}
+
+
+### --- 7. ОБЩИЕ ОШИБКИ ОБНОВЛЕНИЯ ---
+
+### ОШИБКА 404: Обновление несуществующего ID
+PUT http://localhost:8080/api/ref/competition-type/9999
+Content-Type: application/json
+
+{
+  "name": "Никого нет дома",
+  "description": "ID 9999 не существует"
+}
+
+### --- Проверка справочников для отображения на фронте ---
+
+### Ифнормация для страницы с вузами
+GET http://localhost:8080/api/ref/university/stats
+
+### Все спортсмены и тренеры
+
+GET http://localhost:8080/api/users/team
+
+### Все соревнования списком
+
+GET http://localhost:8080/api/competitions/list
+
+### Все спортивные объекты списком
+
+GET http://localhost:8080/api/ref/sport-facilities/list
+
+### Статистика
+
+GET http://localhost:8080/api/statistics
+
+###
+
+POST http://localhost:8080/api/results/personal
+Content-Type: application/json
+
+{
+  "disciplineId": 4,
+  "userId": 4,
+  "rankPlace": 1,
+  "resultValue": "22.5 сек"
+}
+
+###
+GET http://localhost:8080/api/competitions/list/2
+
+### 1. Получить список всех объектов (кратко)
+GET http://localhost:8080/api/ref/sport-facilities/list
+
+### 2. Получить подробную информацию об объекте (ID = 1)
+GET http://localhost:8080/api/ref/sport-facilities/list/12
+
+###
+GET http://localhost:8080/api/ref/university/stats/1

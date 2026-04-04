@@ -1,0 +1,42 @@
+### ============================================
+### СОЗДАНИЕ ДИСЦИПЛИНЫ СОРЕВНОВАНИЯ
+### ============================================
+
+### 1. Создать дисциплину для соревнования
+POST http://localhost:8080/api/competition-disciplines
+Content-Type: application/json
+
+{
+  "disciplineTypeId": 3,
+  "competitionId": 2,
+  "stageId": 7,
+  "disciplineName": "200 метров (Финал)"
+}
+
+### 2. Получить все дисциплины соревнования
+GET http://localhost:8080/api/results/personal
+
+### 3. Получить дисциплины по типу
+GET http://localhost:8080/api/competition-disciplines/discipline-type/1
+
+### 4. Получить дисциплины по этапу
+GET http://localhost:8080/api/competition-disciplines/stage/7
+
+### 5. Обновить название дисциплины
+PUT http://localhost:8080/api/competition-disciplines/1
+Content-Type: application/json
+
+{
+  "disciplineName": "100 метров (Финал, Мужчины)"
+}
+
+### 6. Ошибка: дубликат дисциплины (409)
+POST http://localhost:8080/api/competition-disciplines
+Content-Type: application/json
+
+{
+  "disciplineTypeId": 1,
+  "competitionId": 1,
+  "stageId": 7,
+  "disciplineName": "Дубликат"
+}

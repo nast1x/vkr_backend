@@ -1,0 +1,182 @@
+### 1. Получить всех участников всех команд
+GET http://localhost:8080/api/team-members
+
+### 2. Получить участника команды по ID команды и ID пользователя
+GET http://localhost:8080/api/team-members/2/3
+
+### 3. Получить всех участников команды (например, ID команды = 1)
+GET http://localhost:8080/api/team-members/team/2
+
+### 4. Получить все команды пользователя (например, ID пользователя = 5)
+GET http://localhost:8080/api/team-members/user/3
+
+### ============================================
+### СОЗДАНИЕ (POST)
+### ============================================
+
+### 5. Добавить участника в команду
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 2,
+  "userId": 3,
+  "playerNumber": 10,
+  "playerPositionId": 1
+}
+
+### 6. Добавить участника без позиции (опционально)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 1,
+  "userId": 6,
+  "playerNumber": 7
+}
+
+### 7. Добавить участника без номера
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 2,
+  "userId": 7,
+  "playerPositionId": 2
+}
+
+### ============================================
+### ОБНОВЛЕНИЕ (PUT)
+### ============================================
+
+### 8. Обновить номер игрока
+PUT http://localhost:8080/api/team-members/1/5
+Content-Type: application/json
+
+{
+  "playerNumber": 15
+}
+
+### 9. Обновить позицию игрока
+PUT http://localhost:8080/api/team-members/1/5
+Content-Type: application/json
+
+{
+  "playerPositionId": 3
+}
+
+### 10. Убрать позицию у игрока
+PUT http://localhost:8080/api/team-members/1/5
+Content-Type: application/json
+
+{
+  "playerPositionId": null
+}
+
+### 11. Частичное обновление (только номер)
+PUT http://localhost:8080/api/team-members/1/5
+Content-Type: application/json
+
+{
+  "playerNumber": 20
+}
+
+### ============================================
+### УДАЛЕНИЕ (DELETE)
+### ============================================
+
+### 12. Удалить участника из команды
+DELETE http://localhost:8080/api/team-members/1/5
+
+### 13. Удалить всех участников команды (распустить команду)
+DELETE http://localhost:8080/api/team-members/team/1
+
+### 14. Удалить пользователя из всех команд
+DELETE http://localhost:8080/api/team-members/user/5
+
+### ============================================
+### ТЕСТЫ ВАЛИДАЦИИ И ОШИБОК
+### ============================================
+
+### 15. Ошибка: участник не найден (должен вернуть 404)
+GET http://localhost:8080/api/team-members/999/999
+
+### 16. Ошибка: команда не найдена (должен вернуть 404)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 999,
+  "userId": 5,
+  "playerNumber": 10
+}
+
+### 17. Ошибка: пользователь не найден (должен вернуть 404)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 1,
+  "userId": 999,
+  "playerNumber": 10
+}
+
+### 18. Ошибка: дубликат участника (должен вернуть 409)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 1,
+  "userId": 5,
+  "playerNumber": 11
+}
+
+### 19. Ошибка: позиция не найдена (должен вернуть 404)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 1,
+  "userId": 8,
+  "playerNumber": 10,
+  "playerPositionId": 999
+}
+
+### 20. Ошибка: отсутствие ID команды (должен вернуть 400)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "userId": 5,
+  "playerNumber": 10
+}
+
+### 21. Ошибка: отсутствие ID пользователя (должен вернуть 400)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 1,
+  "playerNumber": 10
+}
+
+### 22. Ошибка: отрицательный номер игрока (должен вернуть 400)
+POST http://localhost:8080/api/team-members
+Content-Type: application/json
+
+{
+  "teamId": 1,
+  "userId": 9,
+  "playerNumber": -5
+}
+
+### 23. Ошибка: участник не найден при обновлении (должен вернуть 404)
+PUT http://localhost:8080/api/team-members/999/999
+Content-Type: application/json
+
+{
+  "playerNumber": 10
+}
+
+### 24. Ошибка: участник не найден при удалении (должен вернуть 404)
+DELETE http://localhost:8080/api/team-members/999/999

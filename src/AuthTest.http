@@ -1,0 +1,197 @@
+### ============================================
+### АУТЕНТИФИКАЦИЯ — ТЕСТОВЫЕ ЗАПРОСЫ
+### ============================================
+
+### 1. ЗАПРОС БЕЗ ТОКЕНА (должен вернуть 401)
+### Защищённый эндпоинт без аутентификации
+GET http://localhost:8080/api/education-places
+Accept: application/json
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4IiwiZW1haWwiOiJhdGhsZXRlMTIzQGV4YW1wbGUuY29tIiwicm9sZSI6IkF0aGxldGUiLCJ0eXBlIjoiYWNjZXNzIiwiaXNzIjoic3BvcnQta3Vycy1hcGkiLCJpYXQiOjE3NzUzMjMwOTIsImV4cCI6MTc3NTMyMzk5Mn0.LB9yPrWQHYxePDZa2-S9vfvEOSB0gjiMHmlWLpAE-baUbLzhgYTDKZgqSb6QWRvB
+
+
+### ============================================
+### РЕГИСТРАЦИЯ И ВХОД
+### ============================================
+
+### 2. Регистрация нового пользователя
+### Сохраняем cookies для последующих запросов
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "athlete123@example.com",
+  "password": "password123",
+  "firstName": "Тест",
+  "lastName": "Спортсменов",
+  "roleName": "Athlete"
+}
+
+> {%
+    client.test("Регистрация успешна", function() {
+        client.assert(response.status === 200, "Ожидался статус 200");
+        client.assert(response.body.email === "test athlete@example.com", "Email не совпадает");
+    });
+    // Сохраняем cookies для следующих запросов
+    client.global.set("auth_cookies", response.headers["Set-Cookie"]);
+%}
+
+### 3. Вход в систему (получение новых токенов)
+### Тестируем корректную установку httpOnly cookies
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "athlete123@example.com",
+  "password": "password123"
+}
+
+
+### 5. Доступ к профилю текущего пользователя
+### Извлекает userId из access_token
+GET http://localhost:8080/api/users/profile/me
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4IiwiZW1haWwiOiJhdGhsZXRlMTIzQGV4YW1wbGUuY29tIiwicm9sZSI6IkF0aGxldGUiLCJ0eXBlIjoiYWNjZXNzIiwiaXNzIjoic3BvcnQta3Vycy1hcGkiLCJpYXQiOjE3NzUzMzI0NTMsImV4cCI6MTc3NTMzMzM1M30.nzxwvx8GLB7pPLDmxSZmsKxQQA3NOUBtKqbZ6TmIhYtUruo0SU-q_1-4tiH1IE00
+
+### ============================================
+### ЗАЩИЩЁННЫЕ ЭНДПОИНТЫ С КОРЕКТНЫМ ТОКЕНОМ
+### ============================================
+
+### 4. Доступ к защищённому эндпоинту с валидным access_token
+### Cookies автоматически подставляются из предыдущего ответа
+GET http://localhost:8080/api/ref/major
+Accept: application/json
+
+
+
+
+### ============================================
+### ОБНОВЛЕНИЕ ТОКЕНОВ (ROTATION)
+### ============================================
+
+### 6. Обновление токенов через refresh endpoint
+### Старый refresh токен заменяется новым
+POST http://localhost:8080/api/auth/refresh
+Accept: application/json
+
+### 7. Проверка доступа после обновления токенов
+### Новый access_token должен работать
+GET http://localhost:8080/api/education-places
+Accept: application/json
+
+> {%
+    client.test("Доступ после refresh токенов разрешён", function() {
+        client.assert(response.status === 200, "Ожидался статус 200");
+    });
+%}
+
+### ============================================
+### НЕКОРРЕКТНЫЕ ЗАПРОСЫ (ОШИБКИ)
+### ============================================
+
+### 8. Запрос с просроченным access_token (симуляция)
+### Клиент вручную устанавливает просроченный токен
+# (В реальном тесте нужно дождаться истечения 15 минут или мокировать время)
+# Для ручного тестирования:
+# 1. Получить токен
+# 2. Подождать 15+ минут
+# 3. Сделать запрос → должен вернуть 401
+
+### 9. Запрос с невалидной подписью токена
+### Подделанный токен должен отклоняться
+# Для ручного тестирования:
+# 1. Скопировать access_token из cookies
+# 2. Изменить одну букву в значении токена
+# 3. Установить вручную и сделать запрос → должен вернуть 401
+
+### 10. Использование refresh_token вместо access_token
+### Тип токена проверяется в фильтре
+# Для ручного тестирования:
+# 1. Скопировать refresh_token из cookies
+# 2. Установить его как access_token в cookie запроса
+# 3. Сделать запрос → должен вернуть 401
+
+### ============================================
+### ВЫХОД ИЗ СИСТЕМЫ (LOGOUT)
+### ============================================
+
+### 11. Выход из системы — очистка cookies
+POST http://localhost:8080/api/auth/logout
+Accept: application/json
+
+
+### 12. Запрос после logout — должен вернуть 401
+### Токены удалены, доступ запрещён
+GET http://localhost:8080/api/education-places
+Accept: application/json
+
+> {%
+    client.test("Доступ после logout запрещён", function() {
+        client.assert(response.status === 401, "Ожидался статус 401 после logout");
+    });
+%}
+
+### ============================================
+### CORS И БЕЗОПАСНОСТЬ COOKIES
+### ============================================
+
+### 13. Проверка CORS заголовков
+### Разрешённые origins должны быть в ответе
+OPTIONS http://localhost:8080/api/education-places
+Origin: http://localhost:4200
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: Content-Type
+
+> {%
+    client.test("CORS заголовки корректны", function() {
+        client.assert(response.headers["Access-Control-Allow-Origin"] === "http://localhost:4200", "CORS origin не совпадает");
+        client.assert(response.headers["Access-Control-Allow-Credentials"] === "true", "Allow-Credentials должен быть true");
+    });
+%}
+
+### 14. Запрос с недопустимым Origin (должен быть отклонён)
+### Если origin не в списке разрешённых
+OPTIONS http://localhost:8080/api/education-places
+Origin: https://malicious-site.com
+Access-Control-Request-Method: GET
+
+> {%
+    client.test("Недопустимый CORS origin отклоняется", function() {
+        // Сервер может вернуть 403 или не установить CORS заголовки
+        const allowOrigin = response.headers["Access-Control-Allow-Origin"];
+        client.assert(allowOrigin !== "https://malicious-site.com", "Недопустимый origin не должен быть разрешён");
+    });
+%}
+
+### ============================================
+### ДОПОЛНИТЕЛЬНЫЕ ПРОВЕРКИ
+### ============================================
+
+### 15. Проверка структуры ответа защищённого эндпоинта
+### Убедиться, что данные корректно маппятся
+GET http://localhost:8080/api/education-places
+Accept: application/json
+
+> {%
+    client.test("Структура ответа корректна", function() {
+        if (response.status === 200 && Array.isArray(response.body) && response.body.length > 0) {
+            const item = response.body[0];
+            client.assert(item.idEducationPlace !== undefined, "Поле idEducationPlace отсутствует");
+            client.assert(item.userId !== undefined, "Поле userId отсутствует");
+            client.assert(item.universityName !== undefined, "Поле universityName отсутствует");
+        }
+    });
+%}
+
+### 16. Проверка обработки несуществующего ресурса
+### 404 должен возвращаться корректно даже с валидным токеном
+GET http://localhost:8080/api/education-places/99999
+Accept: application/json
+
+> {%
+    client.test("Несуществующий ресурс возвращает 404", function() {
+        client.assert(response.status === 404, "Ожидался статус 404 для несуществующего ресурса");
+    });
+%}
+
+###
+GET http://localhost:8080/api/users/profile/me
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4IiwiZW1haWwiOiJhdGhsZXRlMTIzQGV4YW1wbGUuY29tIiwicm9sZSI6IkF0aGxldGUiLCJ0eXBlIjoiYWNjZXNzIiwiaXNzIjoic3BvcnQta3Vycy1hcGkiLCJpYXQiOjE3NzUzMjMwOTIsImV4cCI6MTc3NTMyMzk5Mn0.LB9yPrWQHYxePDZa2-S9vfvEOSB0gjiMHmlWLpAE-baUbLzhgYTDKZgqSb6QWRvB
