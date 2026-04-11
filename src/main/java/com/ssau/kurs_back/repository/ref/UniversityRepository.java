@@ -16,6 +16,7 @@ public interface UniversityRepository extends JpaRepository<University, Integer>
     @Query(value = """
                 SELECT 
                     u.id_university,
+                    u.image_link,
                     u.short_name,
                     u.city,
                     COALESCE(SUM(CASE WHEN r.name = 'Athlete' THEN 1 ELSE 0 END), 0)::int AS athletes_count,
@@ -34,6 +35,7 @@ public interface UniversityRepository extends JpaRepository<University, Integer>
     @Query(value = """
                 SELECT 
                     u.id_university,
+                    u.image_link,
                     u.name,
                     u.short_name,
                     u.city,

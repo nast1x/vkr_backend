@@ -15,6 +15,8 @@ public class UserUpdateDto {
     @Size(min = 8, message = "Пароль должен быть минимум 8 символов")
     private String password;
 
+    private String oldPassword;
+
     private String lastName;
 
     private String firstName;

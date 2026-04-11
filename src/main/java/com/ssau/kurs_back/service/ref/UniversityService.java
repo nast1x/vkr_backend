@@ -79,13 +79,14 @@ public class UniversityService {
 
         return UniversityDetailDto.builder()
                 .id(convertToInt(basicInfo[0]))
-                .name((String) basicInfo[1])
-                .shortName((String) basicInfo[2])
-                .city((String) basicInfo[3])
-                .description((String) basicInfo[4])
-                .totalAthletes(convertToInt(basicInfo[5]))
-                .totalCoaches(convertToInt(basicInfo[6]))
-                .ratingPlace(convertToInt(basicInfo[7]))
+                .imageLink((String) basicInfo[1])
+                .name((String) basicInfo[2])
+                .shortName((String) basicInfo[3])
+                .city((String) basicInfo[4])
+                .description((String) basicInfo[5])
+                .totalAthletes(convertToInt(basicInfo[6]))
+                .totalCoaches(convertToInt(basicInfo[7]))
+                .ratingPlace(convertToInt(basicInfo[8]))
                 .coaches(new ArrayList<>(coachMap.values()))
                 .build();
     }

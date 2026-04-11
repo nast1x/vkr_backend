@@ -236,5 +236,34 @@ GET http://localhost:8080/api/ref/sport-facilities/list
 ### 2. Получить подробную информацию об объекте (ID = 1)
 GET http://localhost:8080/api/ref/sport-facilities/list/12
 
+### 2. Получить подробную информацию об объекте (ID = 1)
+PUT http://localhost:8080/api/ref/sport-facilities/12
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1ODYzOTcwLCJleHAiOjE3NzU4NjQ4NzB9.yNhiz_Bia6PwBZpsHnKPU9JJ6IvINFkgJz4gzDiuVetgJZku-YK_Te3RyvChi2eT
+Content-Type: application/json
+
+{
+  "name": "Олимпийский комплекс «Лужники»",
+  "city": "Москва",
+  "streetNumber": "24",
+  "street": "Лужнецкая набережная",
+  "imageLink": "https://upload.wikimedia.org/wikipedia/commons/3/33/Luzhniki_Stadium_in_Moscow1.jpg"
+}
+
 ###
-GET http://localhost:8080/api/ref/university/stats/1
+GET http://localhost:8080/api/ref/university
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1OTMzNzI5LCJleHAiOjE3NzU5MzQ2Mjl9.44hasekWTWhNmsoPEy2JGZi94ueXQ1_Tj6NAdn6JNBL9uvw-cl7G6VatKMLgDAtn
+###
+PUT http://localhost:8080/api/ref/university/1
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1OTI0MzE1LCJleHAiOjE3NzU5MjUyMTV9.GSmTWujPdnT927q3lBJ-kJ0LWjMO0Qf6gMg2NiVQ1PoadHK0w9ORE_o-c7zHYkOG
+Content-Type: application/json
+
+{
+  "city": "Самара",
+  "name": "Самарский национальный исследовательский университет имени академика С.П. Королева",
+  "shortName": "СНИУ им. Королёва",
+  "imageLink": "https://upload.wikimedia.org/wikipedia/commons/3/33/Luzhniki_Stadium_in_Moscow1.jpg"
+}
+
+###
+GET http://localhost:8080/api/education-places
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1OTQ0Nzc5LCJleHAiOjE3NzU5NDU2Nzl9.OVfgUr2tTWVKkoDQeDGvsGJETNkfL-2NuGh4d8p4LAwmeXTgz0fzBze_PpiuzIeN

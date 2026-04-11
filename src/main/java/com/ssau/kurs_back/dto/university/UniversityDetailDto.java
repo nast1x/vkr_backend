@@ -11,7 +11,7 @@ public class UniversityDetailDto {
     private String name;
     private String shortName;
     private String city;
-    private String photo;
+    private String imageLink;
     private String description;
     private Integer totalAthletes;
     private Integer totalCoaches;

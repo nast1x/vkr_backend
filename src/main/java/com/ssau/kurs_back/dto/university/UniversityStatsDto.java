@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonPropertyOrder({
         "idUniversity",
+        "imageLink",
         "shortName",
         "city",
         "athletesCount",
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 })
 public class UniversityStatsDto {
     private Integer idUniversity;
+    private String imageLink;
     private String shortName;
     private String city;
     private Integer athletesCount;

@@ -160,7 +160,10 @@ public class UserService {
             user.setEmail(dto.getEmail());
         }
 
-        if (dto.getPassword() != null) {
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+            if (dto.getOldPassword() == null || !passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+                throw new IllegalArgumentException("Текущий пароль введен неверно");
+            }
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
@@ -185,6 +188,17 @@ public class UserService {
             user.setCoach(null);
         }
 
+        return toResponseDto(repository.save(user));
+    }
+
+    @Transactional
+    public UserResponseDto updateRole(Integer userId, Integer roleId) {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь", userId));
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new ResourceNotFoundException("Роль", roleId));
+
+        user.setRole(role);
         return toResponseDto(repository.save(user));
     }
 

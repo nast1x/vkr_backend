@@ -87,7 +87,7 @@ public class SportFacilityService {
                 .name(basicInfo[1] != null ? basicInfo[1].toString() : "")
                 .city(basicInfo[2] != null ? basicInfo[2].toString() : "")
                 .address(basicInfo[3] != null ? basicInfo[3].toString() : "")
-                .photo(basicInfo[4] != null ? basicInfo[4].toString() : "/assets/images/facility-placeholder.png")
+                .imageLink(basicInfo[4] != null ? basicInfo[4].toString() : "/assets/images/facility-placeholder.png")
                 .description(basicInfo[5] != null ? basicInfo[5].toString() : "")
                 .sportsList(sportsList)
                 .competitions(competitions)
@@ -103,6 +103,21 @@ public class SportFacilityService {
     @Transactional
     public void deleteById(Integer id) {
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public SportFacility update(Integer id, SportFacility entity) {
+        SportFacility existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Спортивный объект", id));
+
+        if (entity.getName() != null) existing.setName(entity.getName());
+        if (entity.getCity() != null) existing.setCity(entity.getCity());
+        if (entity.getStreet() != null) existing.setStreet(entity.getStreet());
+        if (entity.getStreetNumber() != null) existing.setStreetNumber(entity.getStreetNumber());
+        if (entity.getDescription() != null) existing.setDescription(entity.getDescription());
+        if (entity.getImageLink() != null) existing.setImageLink(entity.getImageLink());
+
+        return repository.save(existing);
     }
 
     public List<SportFacility> searchByCity(String city) {

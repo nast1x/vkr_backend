@@ -16,7 +16,7 @@ public class SportFacilityDetailDto {
     private String name;
     private String city;
     private String address;
-    private String photo;
+    private String imageLink;
     private String description;
     private List<String> sportsList;
     private List<CompetitionDto> competitions;

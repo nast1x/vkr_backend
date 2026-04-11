@@ -107,4 +107,11 @@ public class UserController {
 
         return ResponseEntity.ok(updatedProfile);
     }
+
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<UserResponseDto> updateRole(
+            @PathVariable Integer id,
+            @RequestParam Integer roleId) {
+        return ResponseEntity.ok(service.updateRole(id, roleId));
+    }
 }

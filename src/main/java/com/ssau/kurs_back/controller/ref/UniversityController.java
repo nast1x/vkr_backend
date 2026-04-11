@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ref/university")
@@ -54,10 +55,11 @@ public class UniversityController {
     public ResponseEntity<University> update(@PathVariable Integer id, @Valid @RequestBody University entity) {
         return service.findById(id)
                 .map(existing -> {
-                    existing.setName(entity.getName());
-                    existing.setShortName(entity.getShortName());
-                    existing.setCity(entity.getCity());
-                    existing.setDescription(entity.getDescription());
+                    Optional.ofNullable(entity.getName()).ifPresent(existing::setName);
+                    Optional.ofNullable(entity.getShortName()).ifPresent(existing::setShortName);
+                    Optional.ofNullable(entity.getCity()).ifPresent(existing::setCity);
+                    Optional.ofNullable(entity.getDescription()).ifPresent(existing::setDescription);
+                    Optional.ofNullable(entity.getImageLink()).ifPresent(existing::setImageLink);
                     return ResponseEntity.ok(service.save(existing));
                 })
                 .orElse(ResponseEntity.notFound().build());

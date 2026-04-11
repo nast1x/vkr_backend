@@ -1,6 +1,7 @@
 
 ### 1. Получить все места обучения
 GET http://localhost:8080/api/education-places
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoibmFzdGF5dGl4MUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsInR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJzcG9ydC1rdXJzLWFwaSIsImlhdCI6MTc3NTQxNjM4NSwiZXhwIjoxNzc1NDE3Mjg1fQ.PbHo2VtSxRqMGv3kCA__Lkn_8w98wjyjQvhS1pYw_3mn97sLWYe-eqGSeQ4RORks
 
 ### 2. Получить место обучения по ID (например, ID = 1)
 GET http://localhost:8080/api/education-places/1
@@ -20,21 +21,23 @@ GET http://localhost:8080/api/education-places/major/1
 
 ### 6. Создать место обучения
 POST http://localhost:8080/api/education-places
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoibmFzdGF5dGl4MUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsInR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJzcG9ydC1rdXJzLWFwaSIsImlhdCI6MTc3NTQxNjM4NSwiZXhwIjoxNzc1NDE3Mjg1fQ.PbHo2VtSxRqMGv3kCA__Lkn_8w98wjyjQvhS1pYw_3mn97sLWYe-eqGSeQ4RORks
 Content-Type: application/json
 
 {
-  "userId": 4,
-  "universityId": 5,
+  "userId": 13,
+  "universityId": 1,
   "majorId": 5,
-  "courseYear": 3
+  "courseYear": 4
 }
 
 ### 7. Создать место обучения без курса (опционально)
 POST http://localhost:8080/api/education-places
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoibmFzdGF5dGl4MUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsInR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJzcG9ydC1rdXJzLWFwaSIsImlhdCI6MTc3NTQxNjM4NSwiZXhwIjoxNzc1NDE3Mjg1fQ.PbHo2VtSxRqMGv3kCA__Lkn_8w98wjyjQvhS1pYw_3mn97sLWYe-eqGSeQ4RORks
 Content-Type: application/json
 
 {
-  "userId": 3,
+  "userId": 14,
   "universityId": 1,
   "majorId": 8
 }
@@ -44,15 +47,17 @@ Content-Type: application/json
 ### ============================================
 
 ### 8. Обновить курс обучения
-PUT http://localhost:8080/api/education-places/1
+PUT http://localhost:8080/api/education-places/11
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1OTQ2ODA4LCJleHAiOjE3NzU5NDc3MDh9.Z41XAZpxvXiSjNmzBbFzjChznPZNEvNiSCC6sVtZ9R467KMYHMvsx4APOEDpKqVt
 Content-Type: application/json
 
 {
-  "courseYear": 4
+  "courseYear": 0
 }
 
 ### 9. Обновить специальность
 PUT http://localhost:8080/api/education-places/1
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoibmFzdGF5dGl4MUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsInR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJzcG9ydC1rdXJzLWFwaSIsImlhdCI6MTc3NTQxNjM4NSwiZXhwIjoxNzc1NDE3Mjg1fQ.PbHo2VtSxRqMGv3kCA__Lkn_8w98wjyjQvhS1pYw_3mn97sLWYe-eqGSeQ4RORks
 Content-Type: application/json
 
 {

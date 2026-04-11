@@ -57,10 +57,21 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/**").permitAll()
 
-                        // Публичные справочники
-                        .requestMatchers("/api/ref/**").permitAll()
+                        // Публичное чтение справочников и соревнований (Без регистрации)
+                        .requestMatchers(HttpMethod.GET, "/api/ref/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/competitions/**").permitAll()
 
-                        // ✅ Защищённые эндпоинты пользователей
+                        // Права Администратора на создание/изменение/удаление
+                        // Метод hasRole("ADMIN") автоматически проверяет наличие "ROLE_ADMIN"
+                        .requestMatchers(HttpMethod.POST, "/api/ref/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/ref/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/ref/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/api/competitions/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/competitions/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/competitions/**").hasRole("ADMIN")
+
+                        // Защищённые эндпоинты пользователей
                         .requestMatchers("/api/users/profile/**").authenticated()
                         .requestMatchers("/api/users/**").authenticated()
 

@@ -101,18 +101,20 @@ public class EducationPlaceService {
                 .orElseThrow(() -> new ResourceNotFoundException("Место обучения", id));
 
         if (dto.getUniversityId() != null) {
-            // Проверка на дубликат при смене вуза
-            if (repository.existsByUserIdUserAndUniversityIdUniversity(
-                    educationPlace.getUser().getIdUser(), dto.getUniversityId())) {
-                throw new DuplicateResourceException(
-                        "Запись о обучении (пользователь + вуз)",
-                        educationPlace.getUser().getIdUser() + " + " + dto.getUniversityId()
-                );
+            // ИСПРАВЛЕНИЕ: Проверяем на дубликат ТОЛЬКО если ВУЗ действительно изменился
+            if (!dto.getUniversityId().equals(educationPlace.getUniversity().getIdUniversity())) {
+                if (repository.existsByUserIdUserAndUniversityIdUniversity(
+                        educationPlace.getUser().getIdUser(), dto.getUniversityId())) {
+                    throw new DuplicateResourceException(
+                            "Запись о обучении (пользователь + вуз)",
+                            educationPlace.getUser().getIdUser() + " + " + dto.getUniversityId()
+                    );
+                }
+                // Если проверки пройдены, находим новый ВУЗ и устанавливаем его
+                University university = universityRepository.findById(dto.getUniversityId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Вуз", dto.getUniversityId()));
+                educationPlace.setUniversity(university);
             }
-
-            University university = universityRepository.findById(dto.getUniversityId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Вуз", dto.getUniversityId()));
-            educationPlace.setUniversity(university);
         }
 
         if (dto.getMajorId() != null) {
@@ -121,6 +123,7 @@ public class EducationPlaceService {
             educationPlace.setMajor(major);
         }
 
+        // Обновляем курс (можно установить null, если передано пустое значение, либо обновить)
         if (dto.getCourseYear() != null) {
             educationPlace.setCourseYear(dto.getCourseYear());
         }

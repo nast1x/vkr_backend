@@ -41,10 +41,10 @@ public class SportFacilityController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-        @GetMapping("/search")
-        public ResponseEntity<List<SportFacility>> searchByCity(@RequestParam String city) {
-            return ResponseEntity.ok(service.searchByCity(city));
-        }
+    @GetMapping("/search")
+    public ResponseEntity<List<SportFacility>> searchByCity(@RequestParam String city) {
+        return ResponseEntity.ok(service.searchByCity(city));
+    }
 
     @PostMapping
     public ResponseEntity<SportFacility> create(@Valid @RequestBody SportFacility entity) {
@@ -55,17 +55,7 @@ public class SportFacilityController {
     @PutMapping("/{id}")
     public ResponseEntity<SportFacility> update(@PathVariable Integer id,
                                                 @Valid @RequestBody SportFacility entity) {
-        return service.findById(id)
-                .map(existing -> {
-                    if (entity.getName() != null) existing.setName(entity.getName());
-                    if (entity.getCity() != null) existing.setCity(entity.getCity());
-                    if (entity.getStreet() != null) existing.setStreet(entity.getStreet());
-                    if (entity.getStreetNumber() != null) existing.setStreetNumber(entity.getStreetNumber());
-                    if (entity.getDescription() != null) existing.setDescription(entity.getDescription());
-                    if (entity.getImageLink() != null) existing.setImageLink(entity.getImageLink());
-                    return ResponseEntity.ok(service.save(existing));
-                })
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(service.update(id, entity));
     }
 
     @DeleteMapping("/{id}")
@@ -76,4 +66,5 @@ public class SportFacilityController {
         );
         return ResponseEntity.noContent().build();
     }
+
 }

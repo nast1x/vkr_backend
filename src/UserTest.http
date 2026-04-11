@@ -23,17 +23,18 @@ GET http://localhost:8080/api/users/coach/1/trainees
 
 ### 6. Создать тренера
 POST http://localhost:8080/api/users
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoibmFzdGF5dGl4MUBnbWFpbC5jb20iLCJyb2xlIjoiQXRobGV0ZSIsInR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJzcG9ydC1rdXJzLWFwaSIsImlhdCI6MTc3NTg1MjMwNiwiZXhwIjoxNzc1ODUzMjA2fQ.SibOhPFO8E5fgnF4LBemHo8UaOLbTm5FxDEz0Xnqjh27wy5k7u3YgrMFmybeq-sd
 Content-Type: application/json
 
 {
-  "email": "at_2@example.com",
-  "password": "password123",
-  "lastName": "Иванов",
-  "firstName": "Иван",
-  "middleName": "Иванович",
-  "birthDate": "1980-05-15",
-  "gender": "Male",
-  "roleId": 2,
+  "email": "admin@admin.com",
+  "password": "admin_admin",
+  "lastName": "admin",
+  "firstName": "admin",
+  "middleName": "admin",
+  "birthDate": "1900-01-01",
+  "gender": "Female",
+  "roleId": 1,
   "coachId": null
 }
 
@@ -55,11 +56,12 @@ Content-Type: application/json
 
 
 ### 8. Обновить данные пользователя (частичное обновление)
-PUT http://localhost:8080/api/users/4
+PUT http://localhost:8080/api/users/14
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoibmFzdGF5dGl4MUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsInR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJzcG9ydC1rdXJzLWFwaSIsImlhdCI6MTc3NTQxNjM4NSwiZXhwIjoxNzc1NDE3Mjg1fQ.PbHo2VtSxRqMGv3kCA__Lkn_8w98wjyjQvhS1pYw_3mn97sLWYe-eqGSeQ4RORks
 Content-Type: application/json
 
 {
-  "roleId": 4
+  "roleId": 3
 }
 
 
@@ -147,13 +149,13 @@ GET http://localhost:8080/api/users/profile/4
 ###
 ### Загрузка фотографии пользователя
 POST http://localhost:8080/api/users/profile/photo
-Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4IiwiZW1haWwiOiJhdGhsZXRlMTIzQGV4YW1wbGUuY29tIiwicm9sZSI6IkF0aGxldGUiLCJ0eXBlIjoiYWNjZXNzIiwiaXNzIjoic3BvcnQta3Vycy1hcGkiLCJpYXQiOjE3NzUzMzI0NTMsImV4cCI6MTc3NTMzMzM1M30.nzxwvx8GLB7pPLDmxSZmsKxQQA3NOUBtKqbZ6TmIhYtUruo0SU-q_1-4tiH1IE00
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxMyIsImVtYWlsIjoibmFzdGF5dGl4MUBnbWFpbC5jb20iLCJyb2xlIjoiVXNlciIsInR5cGUiOiJhY2Nlc3MiLCJpc3MiOiJzcG9ydC1rdXJzLWFwaSIsImlhdCI6MTc3NTQxNjM4NSwiZXhwIjoxNzc1NDE3Mjg1fQ.PbHo2VtSxRqMGv3kCA__Lkn_8w98wjyjQvhS1pYw_3mn97sLWYe-eqGSeQ4RORks
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
 Content-Disposition: form-data; name="file"; filename="avatar.jpg"
 
-< C:/Users/Rasskaz/Desktop/ПЕЧать/Фотки/3f74f2f3e7dd8ac9b5d697439cd3716c.jpg
+< C:/Users/Rasskaz/Desktop/ПЕЧать/Фотки/AF9QHkw_hdUckzcYHGVzRtIDPZ0ASMHHHlNSMDkDgOcG4soakQY-1Ja_uj6xVQZvN3ZeCW_TLPJ7Zqfbb2r_VOYl.jpg
 --WebAppBoundary--
 
 ### 3. Вход в систему (получение новых токенов)
@@ -162,12 +164,32 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "athlete123@example.com",
-  "password": "password123"
+  "email": "nastaytix1@gmail.com",
+  "password": "12345678"
+}
+
+### Тестируем корректную установку httpOnly cookies
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@admin.com",
+  "password": "admin_admin"
+}
+
+###
+PUT http://localhost:8080/api/ref/university/1
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1OTI0NjY1LCJleHAiOjE3NzU5MjU1NjV9.K08sG16zMtU3BbFabJMfXlEfxKAxzX57bISpfOTM_B3alwu3TxkjZKpACp95MnEq
+Content-Type: application/json
+
+{
+  "name": "Самарский национальный исследовательский университет имени академика С.П. Королева",
+  "shortName": "СНИУ",
+  "city": "Самара"
 }
 
 
 ### 5. Доступ к профилю текущего пользователя
 ### Извлекает userId из access_token
-GET http://localhost:8080/api/users/profile/me
-Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI4IiwiZW1haWwiOiJhdGhsZXRlMTIzQGV4YW1wbGUuY29tIiwicm9sZSI6IkF0aGxldGUiLCJ0eXBlIjoiYWNjZXNzIiwiaXNzIjoic3BvcnQta3Vycy1hcGkiLCJpYXQiOjE3NzUzMzI0NTMsImV4cCI6MTc3NTMzMzM1M30.nzxwvx8GLB7pPLDmxSZmsKxQQA3NOUBtKqbZ6TmIhYtUruo0SU-q_1-4tiH1IE00
+GET http://localhost:8080/api/ref/university/1
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1OTQ0Nzc5LCJleHAiOjE3NzU5NDU2Nzl9.OVfgUr2tTWVKkoDQeDGvsGJETNkfL-2NuGh4d8p4LAwmeXTgz0fzBze_PpiuzIeN

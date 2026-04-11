@@ -34,6 +34,9 @@ public class University {
     @Column(nullable = false, length = 100)
     private String city;
 
+    @Column(name = "image_link", columnDefinition = "TEXT")
+    private String imageLink;
+
     private String description;
 
     @PrePersist
