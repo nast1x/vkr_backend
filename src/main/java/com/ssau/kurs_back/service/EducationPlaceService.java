@@ -31,9 +31,21 @@ public class EducationPlaceService {
     private final MajorRepository majorRepository;
 
     public List<EducationPlaceResponseDto> findAll() {
-        return repository.findAll().stream()
+        // 1. Получаем всех пользователей, у которых УЖЕ есть место обучения
+        List<EducationPlaceResponseDto> places = repository.findAll().stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
+
+        // 2. Получаем пользователей БЕЗ места обучения и формируем для них "пустые" DTO
+        List<User> usersWithoutEducation = userRepository.findUsersWithoutEducationPlace();
+        List<EducationPlaceResponseDto> emptyPlaces = usersWithoutEducation.stream()
+                .map(this::toEmptyResponseDto)
+                .collect(Collectors.toList());
+
+        // 3. Объединяем списки
+        places.addAll(emptyPlaces);
+
+        return places;
     }
 
     public EducationPlaceResponseDto findById(Integer id) {
@@ -144,6 +156,8 @@ public class EducationPlaceService {
                 .idEducationPlace(educationPlace.getIdEducationPlace())
                 .userId(educationPlace.getUser().getIdUser())
                 .userName(educationPlace.getUser().getFirstName() + " " + educationPlace.getUser().getLastName())
+                .roleId(educationPlace.getUser().getRole().getIdRole())
+                .userRole(educationPlace.getUser().getRole().getName()) // ДОБАВЛЕНО
                 .universityId(educationPlace.getUniversity().getIdUniversity())
                 .universityName(educationPlace.getUniversity().getName())
                 .universityShortName(educationPlace.getUniversity().getShortName())
@@ -151,6 +165,24 @@ public class EducationPlaceService {
                 .majorName(educationPlace.getMajor().getName())
                 .majorCode(educationPlace.getMajor().getCode())
                 .courseYear(educationPlace.getCourseYear())
+                .build();
+    }
+
+    // ДОБАВЛЕНО: Метод для конвертации пользователя без места обучения в DTO
+    private EducationPlaceResponseDto toEmptyResponseDto(User user) {
+        return EducationPlaceResponseDto.builder()
+                .idEducationPlace(null) // ID места обучения нет
+                .userId(user.getIdUser())
+                .userName(user.getFirstName() + " " + (user.getLastName() != null ? user.getLastName() : ""))
+                .roleId(user.getRole().getIdRole())
+                .userRole(user.getRole().getName())
+                .universityId(null)
+                .universityName(null)
+                .universityShortName("—")
+                .majorId(null)
+                .majorName(null)
+                .majorCode("—")
+                .courseYear(null)
                 .build();
     }
 }

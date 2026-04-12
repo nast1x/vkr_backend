@@ -9,6 +9,8 @@ public class EducationPlaceResponseDto {
     private Integer idEducationPlace;
     private Integer userId;
     private String userName;
+    private Integer roleId;
+    private String userRole;
     private Integer universityId;
     private String universityName;
     private String universityShortName;

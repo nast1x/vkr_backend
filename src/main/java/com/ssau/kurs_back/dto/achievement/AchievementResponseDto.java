@@ -15,6 +15,7 @@ public class AchievementResponseDto {
     private String sportTypeName;
     private Integer userId;
     private String userName;
+    private String userRole;
     private LocalDate dateReceived;
     private Integer experienceYears;
 }

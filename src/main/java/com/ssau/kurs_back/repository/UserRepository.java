@@ -52,13 +52,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = """
     SELECT 
         st.name,
-        sr.name
+        sr.name,
+        a.date_received
     FROM "Achievement" a
     JOIN "Sport_Type" st ON a.id_sport_type = st.id_sport_type
     JOIN "Sport_Rank" sr ON a.id_sport_rank = sr.id_sport_rank
     WHERE a.id_user = :userId
     ORDER BY a.date_received DESC
-    LIMIT 1
 """, nativeQuery = true)
     List<Object[]> findSportInfo(@Param("userId") Integer userId);
 
@@ -86,4 +86,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
         ORDER BY c.start_date DESC
     """, nativeQuery = true)
     List<Object[]> findPersonalRecords(@Param("userId") Integer userId);
+
+    @Query("""
+        SELECT u FROM User u
+        LEFT JOIN EducationPlace ep ON u.idUser = ep.user.idUser
+        WHERE ep.idEducationPlace IS NULL
+    """)
+    List<User> findUsersWithoutEducationPlace();
 }

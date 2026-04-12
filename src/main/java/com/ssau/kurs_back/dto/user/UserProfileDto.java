@@ -28,8 +28,9 @@ public class UserProfileDto {
     private String coachName;
 
     // Вид спорта
-    private String sport;
-    private String category;
+    private List<UserSportDto> sport;
+    private List<UserSportDto> category;
+    private List<UserSportDto> dateReceived;
 
     // Воспитанники (если тренер)
     private List<TraineeDto> trainees;
@@ -54,5 +55,12 @@ public class UserProfileDto {
         private String date;
         private Integer competitionId;
         private String competitionName;
+    }
+    @Data
+    @Builder
+    public static class UserSportDto {
+        private String sportName;
+        private String rankName;
+        private LocalDate dateReceived;
     }
 }

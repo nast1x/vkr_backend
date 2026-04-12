@@ -128,7 +128,8 @@ public class AchievementService {
                 .sportTypeId(achievement.getSportType().getIdSportType())
                 .sportTypeName(achievement.getSportType().getName())
                 .userId(achievement.getUser().getIdUser())
-                .userName(achievement.getUser().getFirstName() + " " + achievement.getUser().getLastName())
+                .userName(achievement.getUser().getLastName() + " " + achievement.getUser().getFirstName() + " " + achievement.getUser().getMiddleName() )
+                .userRole(achievement.getUser().getRole().getName())
                 .dateReceived(achievement.getDateReceived())
                 .experienceYears(achievement.getExperienceYears())
                 .build();

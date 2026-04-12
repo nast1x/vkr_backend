@@ -235,25 +235,30 @@ public class UserService {
 
         // Спорт
         List<Object[]> sportResults = repository.findSportInfo(userId);
-        String sport = null;
-        String category = null;
+        List<UserProfileDto.UserSportDto> sportsList = new ArrayList<>();
 
-        if (!sportResults.isEmpty()) {
-            Object[] sp = sportResults.get(0);
-            sport = (String) sp[0];
-            category = (String) sp[1];
+        for (Object[] row : sportResults) {
+            sportsList.add(UserProfileDto.UserSportDto.builder()
+                    .sportName((String) row[0])
+                    .rankName((String) row[1])
+                    .dateReceived((LocalDate) row[2])
+                    .build());
         }
 
         // Воспитанники (если тренер)
         List<UserProfileDto.TraineeDto> trainees = new ArrayList<>();
         if ("Coach".equals(user.getRole().getName())) {
+
+            // Берем первый вид спорта тренера как основной для его подопечных (если список не пуст)
+            String mainSport = sportsList.isEmpty() ? null : sportsList.get(0).getSportName();
+
             List<Object[]> traineesData = repository.findTraineesByCoachId(userId);
             for (Object[] row : traineesData) {
                 trainees.add(UserProfileDto.TraineeDto.builder()
                         .id(convertToInt(row[0]))
                         .fullName((String) row[1])
                         .avatar(row[2] != null ? (String) row[2] : "/assets/images/avatar-placeholder.png")
-                        .sport(sport)
+                        .sport(mainSport) // Передаем строку, а не список
                         .build());
             }
         }
@@ -288,8 +293,7 @@ public class UserService {
                 .course(course)
                 .coachId(user.getCoach() != null ? user.getCoach().getIdUser() : null)
                 .coachName(user.getCoach() != null ? buildFullName(user.getCoach()) : null)
-                .sport(sport)
-                .category(category)
+                .sport(sportsList)
                 .trainees(trainees)
                 .records(records)
                 .build();
