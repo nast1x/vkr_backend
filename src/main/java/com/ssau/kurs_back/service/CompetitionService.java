@@ -44,7 +44,6 @@ public class CompetitionService {
         return repository.findCompetitionList();
     }
 
-    // ✅ Новый метод: подробная информация о соревновании
     public CompetitionDetailDto findCompetitionDetail(Integer competitionId) {
 
         Object result = repository.findCompetitionDetail(competitionId)

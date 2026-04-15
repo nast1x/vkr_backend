@@ -155,7 +155,7 @@ public class EducationPlaceService {
         return EducationPlaceResponseDto.builder()
                 .idEducationPlace(educationPlace.getIdEducationPlace())
                 .userId(educationPlace.getUser().getIdUser())
-                .userName(educationPlace.getUser().getFirstName() + " " + educationPlace.getUser().getLastName())
+                .userName(educationPlace.getUser().getLastName() + " " + educationPlace.getUser().getFirstName() + " " + educationPlace.getUser().getMiddleName())
                 .roleId(educationPlace.getUser().getRole().getIdRole())
                 .userRole(educationPlace.getUser().getRole().getName()) // ДОБАВЛЕНО
                 .universityId(educationPlace.getUniversity().getIdUniversity())

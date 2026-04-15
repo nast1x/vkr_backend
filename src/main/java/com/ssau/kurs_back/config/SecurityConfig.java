@@ -30,28 +30,28 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsServiceImpl userDetailsService;
+    private final List<String> originsList;
 
-    @Value("${cors.allowed-origins:http://localhost:4200}")
-    private String allowedOrigins;
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            UserDetailsServiceImpl userDetailsService,
+            @Value("${cors.allowed-origins:http://localhost:4200}") String allowedOrigins) {
+
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.userDetailsService = userDetailsService;
+        this.originsList = Arrays.asList(allowedOrigins.split(","));
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // ✅ Stateless сессия
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // ✅ CSRF отключён для REST API
                 .csrf(AbstractHttpConfigurer::disable)
-
-                // ✅ CORS с credentials
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-                // ✅ Разрешаем публичные эндпоинты
                 .authorizeHttpRequests(auth -> auth
                         // Публичные эндпоинты аутентификации
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
@@ -79,10 +79,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // ✅ JWT фильтр
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // ✅ Authentication provider
                 .authenticationProvider(authenticationProvider());
 
         return http.build();
@@ -109,12 +106,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        List<String> origins = Arrays.asList(allowedOrigins.split(","));
-        configuration.setAllowedOriginPatterns(origins);
-
+        configuration.setAllowedOriginPatterns(this.originsList);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);  // ✅ ОБЯЗАТЕЛЬНО для cookies!
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

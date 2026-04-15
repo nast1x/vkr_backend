@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Table(name = "\"Sport_Facility\"", uniqueConstraints = {
-        @UniqueConstraint(name = "AK_Facility_Address", columnNames = {"city", "street", "street_number"})
+        @UniqueConstraint(name = "AK_Facility_Address", columnNames = {"\"city\"", "\"street\"", "\"street_number\""})
 })
 @Builder
 @NoArgsConstructor

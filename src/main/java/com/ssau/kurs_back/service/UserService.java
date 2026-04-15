@@ -191,6 +191,7 @@ public class UserService {
         return toResponseDto(repository.save(user));
     }
 
+
     @Transactional
     public UserResponseDto updateRole(Integer userId, Integer roleId) {
         User user = repository.findById(userId)
@@ -258,7 +259,7 @@ public class UserService {
                         .id(convertToInt(row[0]))
                         .fullName((String) row[1])
                         .avatar(row[2] != null ? (String) row[2] : "/assets/images/avatar-placeholder.png")
-                        .sport(mainSport) // Передаем строку, а не список
+                        .sport(mainSport)
                         .build());
             }
         }
@@ -292,6 +293,9 @@ public class UserService {
                 .faculty(faculty)
                 .course(course)
                 .coachId(user.getCoach() != null ? user.getCoach().getIdUser() : null)
+                .coachAvatar(user.getCoach() != null ?
+                        (user.getCoach().getImageLink() != null ? user.getCoach().getImageLink() : "/assets/images/avatar-placeholder.png")
+                        : null)
                 .coachName(user.getCoach() != null ? buildFullName(user.getCoach()) : null)
                 .sport(sportsList)
                 .trainees(trainees)

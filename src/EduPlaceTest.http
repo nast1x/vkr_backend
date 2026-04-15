@@ -153,12 +153,7 @@ Content-Type: application/json
 }
 
 ### 19. Ошибка: отсутствие обязательных полей (должен вернуть 400)
-POST http://localhost:8080/api/education-places
-Content-Type: application/json
-
-{
-  "courseYear": 3
-}
-
+GET http://localhost:8080/api/education-places
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc2MDkyNDc3LCJleHAiOjE3NzYwOTMzNzd9.faqzEcs3KMBQMa1KbXj6u0eAe5XJNpFT5CEOPHrXo097VEDm3JE_-GrHGs223lR3
 ### 20. Ошибка: пользователь не найден при поиске (должен вернуть 404)
 GET http://localhost:8080/api/education-places/user/999

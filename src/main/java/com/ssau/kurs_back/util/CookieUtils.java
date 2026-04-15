@@ -18,10 +18,10 @@ public class CookieUtils {
     public ResponseCookie createTokenCookie(String name, String token, long maxAgeSeconds) {
         return ResponseCookie.from(name, token)
                 .httpOnly(true)
-                .secure(false)  // ❌ Не используйте в продакшене!
+                .secure(false)
                 .path("/")
                 .maxAge(maxAgeSeconds)
-                .sameSite("Lax")  // ✅ Для localhost
+                .sameSite("Lax")
                 .build();
     }
 

@@ -26,6 +26,7 @@ public class UserProfileDto {
     // Тренер (если есть)
     private Integer coachId;
     private String coachName;
+    private String coachAvatar;
 
     // Вид спорта
     private List<UserSportDto> sport;

@@ -3,6 +3,7 @@ package com.ssau.kurs_back.service;
 import com.ssau.kurs_back.dto.achievement.AchievementCreateDto;
 import com.ssau.kurs_back.dto.achievement.AchievementResponseDto;
 import com.ssau.kurs_back.dto.achievement.AchievementUpdateDto;
+import com.ssau.kurs_back.dto.achievement.SportRankAssignmentDto;
 import com.ssau.kurs_back.entity.Achievement;
 import com.ssau.kurs_back.entity.User;
 import com.ssau.kurs_back.entity.ref.SportRank;
@@ -12,6 +13,7 @@ import com.ssau.kurs_back.repository.UserRepository;
 import com.ssau.kurs_back.repository.ref.SportRankRepository;
 import com.ssau.kurs_back.repository.ref.SportTypeRepository;
 import com.ssau.kurs_back.exception.ResourceNotFoundException;
+import com.ssau.kurs_back.service.ref.CompetitionTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,6 +122,42 @@ public class AchievementService {
         repository.deleteById(id);
     }
 
+    @Transactional
+    public void assignSportRank(SportRankAssignmentDto dto, Integer currentUserId) {
+        // 1. Находим того, КТО делает запрос
+        User currentUser = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь", currentUserId));
+
+        // 2. Находим того, КОМУ назначаем разряд
+        User targetUser = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("Пользователь", dto.getUserId()));
+
+        // 3. ПРОВЕРКА ПРАВ: Админ или Тренер этого спортсмена
+        boolean isAdmin = "Admin".equals(currentUser.getRole().getName());
+        boolean isCoach = targetUser.getCoach() != null && targetUser.getCoach().getIdUser().equals(currentUserId);
+
+        if (!isAdmin && !isCoach) {
+            throw new IllegalArgumentException("У вас нет прав назначать разряд этому спортсмену. Вы должны быть администратором или тренером этого пользователя.");
+        }
+
+        // 4. Находим справочные данные
+        SportType sportType = sportTypeRepository.findById(dto.getSportTypeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Вид спорта", dto.getSportTypeId()));
+
+        SportRank sportRank = sportRankRepository.findById(dto.getRankId())
+                .orElseThrow(() -> new ResourceNotFoundException("Спортивный разряд", dto.getRankId()));
+
+        // 5. Создаем и сохраняем достижение
+        Achievement achievement = Achievement.builder()
+                .user(targetUser)
+                .sportType(sportType)
+                .sportRank(sportRank)
+                .dateReceived(dto.getDateReceived())
+                .build();
+
+        repository.save(achievement);
+    }
+
     private AchievementResponseDto toResponseDto(Achievement achievement) {
         return AchievementResponseDto.builder()
                 .idAchievement(achievement.getIdAchievement())
@@ -128,7 +166,7 @@ public class AchievementService {
                 .sportTypeId(achievement.getSportType().getIdSportType())
                 .sportTypeName(achievement.getSportType().getName())
                 .userId(achievement.getUser().getIdUser())
-                .userName(achievement.getUser().getLastName() + " " + achievement.getUser().getFirstName() + " " + achievement.getUser().getMiddleName() )
+                .userName(achievement.getUser().getLastName() + " " + achievement.getUser().getFirstName() + " " + achievement.getUser().getMiddleName())
                 .userRole(achievement.getUser().getRole().getName())
                 .dateReceived(achievement.getDateReceived())
                 .experienceYears(achievement.getExperienceYears())

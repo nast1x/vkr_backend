@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,21 +33,6 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.findById(id));
-    }
-
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserResponseDto> getByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(service.findByEmail(email));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<UserResponseDto>> searchByLastName(@RequestParam String lastName) {
-        return ResponseEntity.ok(service.searchByLastName(lastName));
-    }
-
-    @GetMapping("/coach/{coachId}/trainees")
-    public ResponseEntity<List<UserResponseDto>> getTraineesByCoachId(@PathVariable Integer coachId) {
-        return ResponseEntity.ok(service.findTraineesByCoachId(coachId));
     }
 
     @GetMapping("/team")
@@ -79,32 +65,17 @@ public class UserController {
 
     @GetMapping("/profile/me")
     public ResponseEntity<UserProfileDto> getCurrentUserProfile(
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-        String accessToken = cookieUtils.getTokenFromCookie(request.getCookies(), "access_token");
-        if (accessToken == null || accessToken.isBlank()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        Integer userId = jwtService.extractUserId(accessToken);
-        return ResponseEntity.ok(service.getUserProfile(userId));
+            @AuthenticationPrincipal UserDetails userDetails) {
+        UserResponseDto user = service.findByEmail(userDetails.getUsername());
+        return ResponseEntity.ok(service.getUserProfile(user.getIdUser()));
     }
 
     @PostMapping("/profile/photo")
     public ResponseEntity<UserProfileDto> uploadPhoto(
-            @RequestParam("file") org.springframework.web.multipart.MultipartFile file,
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-
-        // Извлекаем ID текущего пользователя из токена (как в вашем методе getCurrentUserProfile)
-        String accessToken = cookieUtils.getTokenFromCookie(request.getCookies(), "access_token");
-        if (accessToken == null || accessToken.isBlank()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        Integer userId = jwtService.extractUserId(accessToken);
-
-        // Вызываем сервис для сохранения файла и обновления БД
-        UserProfileDto updatedProfile = service.updateUserPhoto(userId, file);
-
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        UserResponseDto user = service.findByEmail(userDetails.getUsername());
+        UserProfileDto updatedProfile = service.updateUserPhoto(user.getIdUser(), file);
         return ResponseEntity.ok(updatedProfile);
     }
 

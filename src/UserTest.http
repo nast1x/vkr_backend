@@ -195,5 +195,11 @@ GET http://localhost:8080/api/ref/university/1
 Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc1OTQ0Nzc5LCJleHAiOjE3NzU5NDU2Nzl9.OVfgUr2tTWVKkoDQeDGvsGJETNkfL-2NuGh4d8p4LAwmeXTgz0fzBze_PpiuzIeN
 
 ###
-GET http://localhost:8080/api/users/profile/1
-Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc2MDA0MTExLCJleHAiOjE3NzYwMDUwMTF9.bkwKgsaExaXJN6zks5uoHB8NXNhzVZK3abkltiBYSt066Xg3-kXEUcIEPl7Gwd7O
+POST http://localhost:8080/api/users/profile/photo
+Cookie: access_token=eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwicm9sZSI6IkFkbWluIiwidHlwZSI6ImFjY2VzcyIsImlzcyI6InNwb3J0LWt1cnMtYXBpIiwiaWF0IjoxNzc2MTc5MTA1LCJleHAiOjE3NzYxODAwMDV9.Pnr7SoDdoP4XM8hZkI6r1_LN-Ev3wV0OGQpmFPfq6imd80WpWg9BluUYUg90NG6I
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+{
+  "id": 1,
+  "file": "  "
+}
